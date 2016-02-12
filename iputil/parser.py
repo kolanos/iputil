@@ -10,9 +10,7 @@ def find_ips(filename):
     matches = []
     with open(filename) as f:
         for line in f:
-            match = IP_REGEX.findall(line)
-            if match:
-                matches += match
+            matches += IP_REGEX.findall(line)
     return set(sorted(matches)) if matches else set()
 
 
