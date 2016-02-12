@@ -31,5 +31,14 @@ class TestFilterIPs(unittest.TestCase):
         store_ips(self.test_cache, ips)
         geoip_lookup(MMDB, self.test_cache)
 
-        result = filter_ips(self.test_cache, 'country == US')
-        self.assertEqual(len(result), 1856)
+        result1 = filter_ips(self.test_cache, 'country == US')
+        self.assertEqual(len(result1), 1856)
+
+        result2 = filter_ips(self.test_cache, 'country != US')
+        self.assertEqual(len(result2), 3144)
+
+        result3 = filter_ips(self.test_cache, 'state == NY or state == PA')
+        self.assertEqual(len(result3), 20)
+
+        result4 = filter_ips(self.test_cache, 'state == UT and state == NV')
+        self.assertEqual(len(result4), 0)
