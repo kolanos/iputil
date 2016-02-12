@@ -5,9 +5,14 @@ import re
 IP_REGEX = re.compile(r'(?:[\d]{1,3})\.(?:[\d]{1,3})\.(?:[\d]{1,3})\.(?:[\d]{1,3})')
 
 
-def find_ips(text):
-    """Returns all the unique IPs found within a string."""
-    matches = IP_REGEX.findall(text)
+def find_ips(filename):
+    """Returns all the unique IPs found within a file."""
+    matches = []
+    with open(filename) as f:
+        for line in f:
+            match = IP_REGEX.findall(line)
+            if match:
+                matches += match
     return set(sorted(matches)) if matches else set()
 
 

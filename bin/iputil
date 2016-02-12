@@ -19,10 +19,10 @@ def cli(cache_path):
 
 
 @cli.command()
-@click.argument('file', type=click.File('rb'))
+@click.argument('file')
 def parse(file):
     """Parse IPs within a file"""
-    ips = find_ips(file.read())
+    ips = find_ips(file)
     new_ips = store_ips(DEFAULT_CACHE_PATH, ips)
     click.echo('Found %d IPs, %d of them new.' % (
         len(ips), new_ips))
