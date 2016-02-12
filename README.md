@@ -10,6 +10,10 @@ To parse IPs contained within a text file, use the following command:
 
     $ iputil parse data/list_of_ips.txt
 
+This command will check for the specified text file in the directory in which
+it is run. It will store a cache of the IPs found in ``/tmp/.ip_cache``. Use
+``--cache-path=PATH`` to specify a different location.
+
 ### GeoIP
 
 To lookup the GeoIPs for each IP found within the text file, use the following
