@@ -182,7 +182,11 @@ def make_struct_parser(code):
 
 
 class MMDBParser(object):
-    """Parser for MaxMind MMDB binary"""
+    """
+    Parser for MaxMind MMDB binary format.
+
+    Reference: https://maxmind.github.io/MaxMind-DB/
+    """
 
     def __init__(self, buffer, offset=0):
         self.buffer = buffer

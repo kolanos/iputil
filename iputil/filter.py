@@ -47,7 +47,10 @@ def query(d, key, val, operator='==', keynotfound=None):
 
 
 class Query(object):
-    """Helper class to make queries chainable."""
+    """
+    Helper class to make queries chainable. Inspired by SQLAlchemy's
+    generative selects.
+    """
 
     def __init__(self, d):
         self.d = itertools.tee(d, 2)[1]
