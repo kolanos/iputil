@@ -26,8 +26,7 @@ class TestFilterIPs(unittest.TestCase):
             os.unlink(self.test_cache)
 
     def test_filter_ips(self):
-        with open(LIST_OF_IPS) as f:
-            ips = find_ips(f.read())
+        ips = find_ips(LIST_OF_IPS)
         store_ips(self.test_cache, ips)
         geoip_lookup(MMDB, self.test_cache)
 

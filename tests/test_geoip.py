@@ -33,8 +33,7 @@ class TestGeoIPLookup(unittest.TestCase):
             os.unlink(self.test_cache)
 
     def test_geoip_lookup(self):
-        with open(LIST_OF_IPS) as f:
-            ips = find_ips(f.read())
+        ips = find_ips(LIST_OF_IPS)
         store_ips(self.test_cache, ips)
         result = geoip_lookup(MMDB, self.test_cache)
         self.assertEqual(len(result), 113)
