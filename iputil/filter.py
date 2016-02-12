@@ -17,6 +17,7 @@ OPERATORS = {
 
 
 def can_take_n_args(func, n=2):
+    """Returns true if the provided function can accept two arguments."""
     (pos, args, kwargs, defaults) = inspect.getargspec(func)
     if args is not None or len(pos) >= n:
         return True
@@ -24,6 +25,7 @@ def can_take_n_args(func, n=2):
 
 
 def query(d, key, val, operator='==', keynotfound=None):
+    """Performs a query on a list of dicts useing the provided operator."""
     d = itertools.tee(d, 2)[1]
     if callable(operator):
         if not can_take_n_args(operator, 2):
@@ -44,7 +46,9 @@ def query(d, key, val, operator='==', keynotfound=None):
     return (x for x in d if try_op(op, x.get(key, keynotfound), val))
 
 
-class Queryable(object):
+class Query(object):
+    """Helper class to recursively perform queries."""
+
     def __init__(self, d):
         self.d = itertools.tee(d, 2)[1]
 
@@ -52,10 +56,11 @@ class Queryable(object):
         return list(itertools.tee(self.d, 2)[1])
 
     def query(self, *args, **kwargs):
-        return Queryable(query(self.d, *args, **kwargs))
+        return Query(query(self.d, *args, **kwargs))
 
 
 def ip_filter(cache_path, query):
+    """Filter IPs using the provided query parameters"""
     if not os.path.exists(cache_path) or not query:
         return []
     with open(cache_path, 'rb') as f:
@@ -63,7 +68,7 @@ def ip_filter(cache_path, query):
     results = []
     or_clauses = query.split('or')
     for or_clause in or_clauses:
-        q = Queryable(cache)
+        q = Query(cache)
         and_clauses = or_clause.split('and')
         for and_clause in and_clauses:
             parts = and_clause.split(None, 2)
