@@ -40,10 +40,9 @@ class GeoIP(object):
             return self.data['continent']['code']
 
     @property
-    def subdivisions(self):
+    def state(self):
         return ', '.join([x['iso_code'] for x in self.data.get('subdivisions') or ()
                           if 'iso_code' in x])
-
 
     @property
     def postal(self):
@@ -73,7 +72,7 @@ class GeoIP(object):
             'ip': self.ip,
             'country': self.country,
             'continent': self.continent,
-            'subdivisions': self.subdivisions,
+            'state': self.state,
             'city': self.city,
             'postal': self.postal,
             'timezone': self.timezone,
@@ -90,7 +89,7 @@ def pack_ip(ip):
     raise ValueError('Malformed IP address')
 
 
-class Database(object):
+class MMDB(object):
     """Context manager to query MaxMind database"""
 
     def __init__(self, filename, buffer, meta_data):
@@ -289,20 +288,22 @@ def read_mmdb_meta_data(buffer):
     return MMDBParser(buffer, offset).read(offset)[0]
 
 
-def open_database(filename):
+def open_mmdb(filename):
+    """Open memory mapped buffer of MMDB"""
     with open(filename, 'rb') as f:
         mmap_buffer = mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ)
     meta_data = read_mmdb_meta_data(mmap_buffer)
-    return Database(filename, mmap_buffer, meta_data)
+    return MMDB(filename, mmap_buffer, meta_data)
 
 
 def geoip_lookup(mmdb_path, cache_path):
+    """Performs GeoIP lookups for IPs stored in cache"""
     if not os.path.exists(cache_path):
         return None
     with open(cache_path, 'rb') as f:
         cache = json.loads(f.read())
     result = defaultdict(lambda: 0)
-    with open_database(mmdb_path) as db:
+    with open_mmdb(mmdb_path) as db:
         for i, ip_data in enumerate(cache):
             if 'geoip' not in ip_data:
                 geoip = db.lookup(ip_data['ip'])

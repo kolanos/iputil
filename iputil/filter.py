@@ -47,7 +47,7 @@ def query(d, key, val, operator='==', keynotfound=None):
 
 
 class Query(object):
-    """Helper class to recursively perform queries."""
+    """Helper class to make queries chainable."""
 
     def __init__(self, d):
         self.d = itertools.tee(d, 2)[1]
@@ -59,7 +59,7 @@ class Query(object):
         return Query(query(self.d, *args, **kwargs))
 
 
-def ip_filter(cache_path, query):
+def filter_ips(cache_path, query):
     """Filter IPs using the provided query parameters"""
     if not os.path.exists(cache_path) or not query:
         return []

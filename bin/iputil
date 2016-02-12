@@ -1,19 +1,13 @@
 #!/usr/bin/env python
 
-import os
-import sys
-
 import click
 
-PARENT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, PARENT_DIR)
-
-from iputil.filter import ip_filter
+from iputil.filter import filter_ips
 from iputil.geoip import geoip_lookup
 from iputil.parser import find_ips, store_ips
 
 DEFAULT_CACHE_PATH = '/tmp/.ip_cache'
-DEFAULT_MMDB_PATH = os.path.join(PARENT_DIR, 'data', 'GeoLite2-City.mmdb')
+DEFAULT_MMDB_PATH = 'data/GeoLite2-City.mmdb'
 
 
 @click.group()
@@ -57,7 +51,7 @@ def geoip(mmdb_path):
               help='Limit number of results')
 def filter(query, limit_results):
     """Filters IPs based on query parameters"""
-    results = ip_filter(DEFAULT_CACHE_PATH, query)
+    results = filter_ips(DEFAULT_CACHE_PATH, query)
     if len(results) == 0:
         click.echo('No results found for your query')
         exit()
@@ -69,7 +63,7 @@ def filter(query, limit_results):
         click.echo('%s\t\t%s, %s %s %s' % (
             result['ip'],
             result.get('city', 'N/A'),
-            result.get('subdivisions', 'N/A'),
+            result.get('state', 'N/A'),
             result.get('postal', 'N/A'),
             result.get('country', 'N/A')))
 

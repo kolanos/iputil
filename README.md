@@ -37,10 +37,10 @@ This will display all the IPs located in the city of Los Angeles.
 
 This will display IPs not located in Japan.
 
-    $ iputil filter "country == US and subdivisions != CO"
+    $ iputil filter "country == US and state != CO"
 
 This will display IPs located in the United States, but not in Colorado.
 
-    $ iputil filter "subdivisions == UT or subdivisions == CA"
+    $ iputil filter "state == UT or state == CA"
 
 This will display IPs located in Utah or California.

@@ -24,16 +24,16 @@ install:
 	$(PYTHON) setup.py install --install-layout=deb
 
 develop:
-	$(PYTHON) setup.py develop
+	source venv/bin/activate && python setup.py develop
 
 test: venv develop
-	source venv/bin/activate && nosetests
+	source venv/bin/activate && python setup.py test
 
 check: venv
 
 venv:
 	test -d venv || virtualenv venv
-	source venv/bin/activate && pip install --quiet --use-wheel -r requirements.txt
+	source venv/bin/activate && python setup.py install
 
 init: clean venv
 
